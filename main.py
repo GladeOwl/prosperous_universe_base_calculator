@@ -1,5 +1,6 @@
 import os
 import sys
+from outpost import Outpost
 from import_data import get_old_data, get_new_data
 from compile_input import input_buildings
 
@@ -25,27 +26,14 @@ if __name__ == "__main__":
     else:
         data: dict = get_old_data(file_path)
 
-    total_area: int = 0
-    buildings: list = []
-    resources: dict = {}
-    population: dict = {
-        "Pioneers": 0,
-        "Settlers": 0,
-        "Technicians": 0,
-        "Engineers": 0,
-        "Scientists": 0,
-    }
+    planet: str = input("Planet Name?: ")
+    outpost: Outpost = Outpost(planet)
 
     is_done: bool = False
 
     while not is_done:
-        total_area += input_buildings(buildings, data, population)
+        input_buildings(outpost, data)
 
         is_done_input = input("Done? (y/n) (default: n): ")
         if is_done_input == "y":
             is_done = True
-
-    get_resource_cost(buildings, resources)
-    print(resources)
-
-    # TODO: This guy is pretty much done. Just need a way to combine all the info into a good terminal output
