@@ -1,8 +1,29 @@
 import os
 import sys
 from outpost import Outpost
-from import_data import get_old_data, get_new_data
-from compile_input import input_buildings
+from building import Building
+from import_data import import_data
+
+
+def input_buildings(outpost: Outpost, data: dict):
+    ticker: str = input("Building Ticker?: ")
+
+    if ticker == "":
+        print("Please input a building name.")
+        return
+
+    for item in data["buildings"]:
+        if item["Ticker"] == ticker:
+            amount: int = int(input("Build Amount? (default: 1): ")) or 1
+
+            building: Building = Building(ticker, amount)
+            building.get_data(item)
+
+            outpost.buildings.append(building)
+
+            print(f"Building Added: {item['Name']}, {amount}x.")
+
+    print("Bad Ticker.")
 
 
 def get_resource_cost(buildings: list, resources: dict):
@@ -17,14 +38,10 @@ def get_resource_cost(buildings: list, resources: dict):
 
 
 if __name__ == "__main__":
-    file_path: str = os.path.join(sys.path[0], "./data.json")
     get_data: str = input("Import new data? (y/n) (default: y): ") or "y"
 
-    if get_data == "y" or not os.path.isfile(file_path):
-        print("Importing new data.")
-        data: dict = get_new_data(file_path)
-    else:
-        data: dict = get_old_data(file_path)
+    need_new_data = get_data == "y" or not os.path.isfile(file_path)
+    data: dict = import_data(need_new_data, file_path)
 
     planet: str = input("Planet Name?: ")
     outpost: Outpost = Outpost(planet)

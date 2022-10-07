@@ -1,32 +1,25 @@
+from outpost import Outpost
+
+
 class Building:
-    def __init__(self, ticker: str) -> None:
+    def __init__(self, ticker: str, amount: int, outpost: Outpost) -> None:
         self.ticker = ticker
+        self.amount = amount
 
     def get_data(self, data: dict):
-        """Find and Compile Data from the JSON data"""
+        """Get Building Data from the JSON data"""
 
-        for building in data["buildings"]:
-            if self.ticker == building["ticker"]:
-                self.name = building["Name"]
-                self.area_cost = building["AreaCost"]
+        self.name = data["Name"]
+        self.area_cost = data["AreaCost"]
 
-                self.add_pop(building)
-                self.add_materials(building)
-
-    def add_pop(self, building: dict):
-        """Adds the Population Data from the JSON data"""
-
-        self.pioneers = building["Pioneers"]
-        self.settlers = building["Settlers"]
-        self.technicians = building["Technicians"]
-        self.engineers = building["Engineers"]
-        self.scientists = building["Scientists"]
-
-    def add_materials(self, building: dict):
-        """Adds the Material Data from the JSON data"""
+        self.pioneers = data["Pioneers"]
+        self.settlers = data["Settlers"]
+        self.technicians = data["Technicians"]
+        self.engineers = data["Engineers"]
+        self.scientists = data["Scientists"]
 
         self.materials = []
-        for material in building["BuildingCosts"]:
+        for material in data["BuildingCosts"]:
             self.materials.append(
                 {"ticker": material["CommodityTicker"], "amount": material["Amount"]}
             )

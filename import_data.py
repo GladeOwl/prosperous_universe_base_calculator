@@ -1,6 +1,17 @@
-from itertools import tee
+import os
+import sys
 import json
 import requests
+
+
+def import_data(new_data: bool):
+    file_path: str = os.path.join(sys.path[0], "./data.json")
+
+    if new_data:
+        print("Importing new data.")
+        return get_new_data(file_path)
+    print("Working with old data")
+    return get_old_data(file_path)
 
 
 def get_old_data(file_path):
