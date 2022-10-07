@@ -1,3 +1,4 @@
+from material import Material
 from outpost import Outpost
 
 
@@ -5,6 +6,7 @@ class Building:
     def __init__(self, ticker: str, amount: int, outpost: Outpost) -> None:
         self.ticker = ticker
         self.amount = amount
+        self.outpost = outpost
 
     def get_data(self, data: dict):
         """Get Building Data from the JSON data"""
@@ -20,6 +22,26 @@ class Building:
 
         self.materials = []
         for material in data["BuildingCosts"]:
+            new_material = Material(material["CommodityTicker"])
             self.materials.append(
-                {"ticker": material["CommodityTicker"], "amount": material["Amount"]}
+                (f"{material['CommodityTicker']}", material["Amount"], new_material)
+            )
+            self.outpost.add_material(
+                material["CommodityTicker"],
+                material["Amount"],
+                self.amount,
+                new_material,
+            )
+
+        self.planet = self.outpost.planet
+        for material in self.planet.required_materials:
+            new_material = Material(material["ticker"])
+            amount = (
+                material["amount"]
+                if not material["area_cost"]
+                else material["amount"] * self.area_cost
+            )
+            self.materials.append((material["ticker"], amount, new_material))
+            self.outpost.add_material(
+                material["ticker"], amount, self.amount, new_material
             )

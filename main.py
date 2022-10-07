@@ -1,5 +1,6 @@
 import os
 import sys
+from planet import Planet
 from outpost import Outpost
 from building import Building
 from import_data import import_data
@@ -38,12 +39,10 @@ def get_resource_cost(buildings: list, resources: dict):
 
 
 if __name__ == "__main__":
-    get_data: str = input("Import new data? (y/n) (default: y): ") or "y"
+    data: dict = import_data(input("Import new data? (y/n) (default: y): ") or "y")
 
-    need_new_data = get_data == "y" or not os.path.isfile(file_path)
-    data: dict = import_data(need_new_data, file_path)
-
-    planet: str = input("Planet Name?: ")
+    planet: Planet = Planet(input("Planet Name?: "))
+    planet.calculate_materials()
     outpost: Outpost = Outpost(planet)
 
     is_done: bool = False

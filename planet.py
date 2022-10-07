@@ -23,25 +23,39 @@ class Planet:
 
     def check_type(self, is_rocky: bool):
         if is_rocky:
-            self.required_materials.append({"MCG": 4, "area_cost": True})
+            self.required_materials.append(
+                {"ticker": "MCG", "amount": 4, "area_cost": True}
+            )
         else:
-            self.required_materials.append({"AEF": 4, "area_cost": True})
+            self.required_materials.append(
+                {"ticker": "AEF", "amount": 4, "area_cost": True}
+            )
 
     def check_temperature(self, temperature: float):
         if temperature > 75:
-            self.required_materials.append({"TSH": 1, "area_cost": False})
+            self.required_materials.append(
+                {"ticker": "TSH", "amount": 1, "area_cost": False}
+            )
         elif temperature < -25:
-            self.required_materials.append({"INS": 10, "area_cost": True})
+            self.required_materials.append(
+                {"ticker": "INS", "amount": 10, "area_cost": True}
+            )
 
     def check_gravity(self, gravity: float):
         if gravity > 2.5:
-            self.required_materials.append({"BL": 1, "area_cost": False})
+            self.required_materials.append(
+                {"ticker": "BL", "amount": 1, "area_cost": False}
+            )
         elif gravity < 0.25:
-            self.required_materials.append({"MGC": 1, "area_cost": False})
+            self.required_materials.append(
+                {"ticker": "MGC", "amount": 1, "area_cost": False}
+            )
 
     def check_pressure(self, pressure: float):
         if pressure > 2:
-            self.required_materials.append({"HSE": 1, "area_cost": False})
+            self.required_materials.append(
+                {"ticker": "HSE", "amount": 1, "area_cost": False}
+            )
         elif pressure < 0.25:
             self.required_materials.append({"SEA": 1, "area_cost": True})
 
