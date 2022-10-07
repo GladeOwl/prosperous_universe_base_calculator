@@ -1,5 +1,3 @@
-import os
-import sys
 from planet import Planet
 from outpost import Outpost
 from building import Building
@@ -17,8 +15,9 @@ def input_buildings(outpost: Outpost, data: dict):
         if item["Ticker"] == ticker:
             amount: int = int(input("Build Amount? (default: 1): ")) or 1
 
-            building: Building = Building(ticker, amount)
-            building.get_data(item)
+            building: Building = Building(ticker, amount, outpost)
+            building.work_data(item)
+            building.add_planet_data()
 
             outpost.buildings.append(building)
 
@@ -53,3 +52,5 @@ if __name__ == "__main__":
         is_done_input = input("Done? (y/n) (default: n): ")
         if is_done_input == "y":
             is_done = True
+
+    outpost.calculate_population()

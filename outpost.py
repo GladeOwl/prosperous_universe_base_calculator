@@ -29,3 +29,14 @@ class Outpost:
                 "info": material_object,
                 "amount": material_amount * building_amount,
             }
+
+    def calculate_population(self):
+        for building in self.buildings:
+            self.pioneers += building.pioneers * building.amount
+            self.settlers += building.settlers * building.amount
+            self.technicians += building.technicians * building.amount
+            self.engineers += building.engineers * building.amount
+            self.scientists += building.scientists * building.amount
+
+    def add_area(self, area_cost):
+        self.total_area += area_cost

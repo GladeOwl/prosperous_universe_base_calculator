@@ -7,12 +7,15 @@ class Building:
         self.ticker = ticker
         self.amount = amount
         self.outpost = outpost
+        self.outpost.buildings.append(self)
 
-    def get_data(self, data: dict):
+    def work_data(self, data: dict):
         """Get Building Data from the JSON data"""
 
         self.name = data["Name"]
+
         self.area_cost = data["AreaCost"]
+        self.outpost.add_area(self.area_cost * self.amount)
 
         self.pioneers = data["Pioneers"]
         self.settlers = data["Settlers"]
@@ -33,6 +36,7 @@ class Building:
                 new_material,
             )
 
+    def add_planet_data(self):
         self.planet = self.outpost.planet
         for material in self.planet.required_materials:
             new_material = Material(material["ticker"])
