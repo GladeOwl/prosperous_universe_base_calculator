@@ -3,6 +3,8 @@ class Building:
         self.ticker = ticker
 
     def get_data(self, data: dict):
+        """Find and Compile Data from the JSON data"""
+
         for building in data["buildings"]:
             if self.ticker == building["ticker"]:
                 self.name = building["Name"]
@@ -12,6 +14,8 @@ class Building:
                 self.add_materials(building)
 
     def add_pop(self, building: dict):
+        """Adds the Population Data from the JSON data"""
+
         self.pioneers = building["Pioneers"]
         self.settlers = building["Settlers"]
         self.technicians = building["Technicians"]
@@ -19,6 +23,8 @@ class Building:
         self.scientists = building["Scientists"]
 
     def add_materials(self, building: dict):
+        """Adds the Material Data from the JSON data"""
+
         self.materials = []
         for material in building["BuildingCosts"]:
             self.materials.append(
