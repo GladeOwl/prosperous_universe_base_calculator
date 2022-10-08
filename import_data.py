@@ -5,10 +5,8 @@ import json
 import requests
 
 
-def import_data(new_data: bool):
-    file_path: str = os.path.join(sys.path[0], "./data.json")
-
-    if new_data or not os.path.isfile(file_path):
+def import_data(new_data: bool, file_path: str):
+    if new_data:
         print("Importing new data.")
         return get_new_data(file_path)
     print("Working with old data")

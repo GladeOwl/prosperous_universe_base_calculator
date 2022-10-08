@@ -1,3 +1,5 @@
+import os
+import sys
 from planet import Planet
 from outpost import Outpost
 from building import Building
@@ -40,8 +42,15 @@ def get_resource_cost(buildings: list, resources: dict):
 
 
 if __name__ == "__main__":
-    new_data = (input("Import new data? (y/n) (default: y): ") or "y") == "y"
-    data: dict = import_data(new_data)
+    file_path: str = os.path.join(sys.path[0], "./data.json")
+
+    if not os.path.isfile(file_path):
+        print("Local Data file Not Found.")
+        new_data: bool = True
+    else:
+        new_data: bool = (input("Import new data? (y/n) (default: y): ") or "y") == "y"
+
+    data: dict = import_data(new_data, file_path)
 
     planet: Planet = Planet(input("Planet Name? (default: Harmonia): ") or "Harmonia")
     planet.calculate_materials()
