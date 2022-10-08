@@ -2,6 +2,7 @@ from planet import Planet
 from outpost import Outpost
 from building import Building
 from import_data import import_data
+from output_data import output_to_terminal
 
 
 def input_buildings(outpost: Outpost, data: dict):
@@ -13,15 +14,16 @@ def input_buildings(outpost: Outpost, data: dict):
 
     for item in data["buildings"]:
         if item["Ticker"] == ticker:
-            amount: int = int(input("Build Amount? (default: 1): ")) or 1
+            amount: int = int(input("Build Amount? (default: 1): ") or 1)
 
             building: Building = Building(ticker, amount, outpost)
             building.work_data(item)
             building.add_planet_data()
 
-            outpost.buildings.append(building)
+            outpost.buildings[ticker] = building
 
             print(f"Building Added: {item['Name']}, {amount}x.")
+            return
 
     print("Bad Ticker.")
 
@@ -38,9 +40,11 @@ def get_resource_cost(buildings: list, resources: dict):
 
 
 if __name__ == "__main__":
-    data: dict = import_data(input("Import new data? (y/n) (default: y): ") or "y")
+    data: dict = import_data(
+        input("Import new data? (y/n) (default: y): ") == "y" or True
+    )
 
-    planet: Planet = Planet(input("Planet Name?: "))
+    planet: Planet = Planet(input("Planet Name? (default: Harmonia): ") or "Harmonia")
     planet.calculate_materials()
     outpost: Outpost = Outpost(planet)
 
@@ -53,4 +57,6 @@ if __name__ == "__main__":
         if is_done_input == "y":
             is_done = True
 
-    outpost.calculate_population()
+    outpost.calculate_data()
+
+    output_to_terminal(outpost)

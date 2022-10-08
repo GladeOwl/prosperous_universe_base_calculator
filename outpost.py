@@ -5,7 +5,7 @@ from planet import Planet
 class Outpost:
     def __init__(self, planet: Planet) -> None:
         self.planet: Planet = planet
-        self.buildings: list = []
+        self.buildings: dict = {}
         self.materials: dict = {}
 
         self.total_area: int = 0
@@ -22,16 +22,25 @@ class Outpost:
         building_amount: int,
         material_object: Material,
     ):
-        if self.materials[ticker]:
-            self.materials[ticker]["amount"] += material_amount * building_amount
-        else:
-            self.materials[ticker] = {
-                "info": material_object,
-                "amount": material_amount * building_amount,
-            }
+        self.materials[ticker] = {
+            "info": material_object,
+            "amount": material_amount * building_amount,
+        }
+
+    def add_material_amount(self, ticker, amount):
+        self.materials[ticker]["amount"] += amount
+
+    def calculate_data(self):
+        self.calculate_prices()
+        self.calculate_population()
+
+    def calculate_prices(self):
+        for material in self.materials:
+            material["info"].get_price()
 
     def calculate_population(self):
-        for building in self.buildings:
+        for ticker in self.buildings:
+            building = self.buildings[ticker]
             self.pioneers += building.pioneers * building.amount
             self.settlers += building.settlers * building.amount
             self.technicians += building.technicians * building.amount

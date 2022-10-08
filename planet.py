@@ -58,7 +58,3 @@ class Planet:
             )
         elif pressure < 0.25:
             self.required_materials.append({"SEA": 1, "area_cost": True})
-
-
-planet = Planet("Harmonia")
-planet.get_data()
