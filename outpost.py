@@ -30,13 +30,18 @@ class Outpost:
     def add_material_amount(self, ticker, amount):
         self.materials[ticker]["amount"] += amount
 
-    def calculate_data(self):
-        self.calculate_prices()
+    def calculate_data(self, data: dict):
+        self.calculate_prices(data)
         self.calculate_population()
 
-    def calculate_prices(self):
-        for material in self.materials:
-            material["info"].get_price()
+    def calculate_prices(self, data: dict):
+        self.total_price = 0
+        for ticker in self.materials:
+            material_object: Material = self.materials[ticker]["info"]
+            material_object.get_price(data)
+            self.total_price += round(
+                material_object.price * self.materials[ticker]["amount"], 2
+            )
 
     def calculate_population(self):
         for ticker in self.buildings:

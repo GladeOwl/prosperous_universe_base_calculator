@@ -40,9 +40,8 @@ def get_resource_cost(buildings: list, resources: dict):
 
 
 if __name__ == "__main__":
-    data: dict = import_data(
-        input("Import new data? (y/n) (default: y): ") == "y" or True
-    )
+    new_data = (input("Import new data? (y/n) (default: y): ") or "y") == "y"
+    data: dict = import_data(new_data)
 
     planet: Planet = Planet(input("Planet Name? (default: Harmonia): ") or "Harmonia")
     planet.calculate_materials()
@@ -57,6 +56,6 @@ if __name__ == "__main__":
         if is_done_input == "y":
             is_done = True
 
-    outpost.calculate_data()
+    outpost.calculate_data(data)
 
     output_to_terminal(outpost)

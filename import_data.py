@@ -1,5 +1,6 @@
 import os
 import sys
+import csv
 import json
 import requests
 
@@ -23,6 +24,34 @@ def get_old_data(file_path):
         raise FileNotFoundError("Could not access the existing data!")
 
 
+## Currently only supports AI1 AIC Prices
+def get_price_data():
+    response = requests.get("https://rest.fnar.net/csv/prices")
+    with open("./prices.txt", "w") as txtf:
+        txtf.write(response.text)
+
+    with open("./prices.txt", "r") as txtf:
+        stripped = (line.strip() for line in txtf)
+        lines = (line.split(",") for line in stripped if line)
+
+        with open("./prices.csv", "w") as csvf:
+            writer = csv.writer(csvf)
+            writer.writerows(lines)
+
+    with open("./prices.csv", "r", encoding="utf-8") as csvf:
+        csv_data = csv.DictReader(csvf)
+        prices = {}
+        for rows in csv_data:
+            key = rows["Ticker"]
+            prices[key] = (
+                round(float(rows["AI1-AskPrice"]), 2)
+                if rows["AI1-AskPrice"] != ""
+                else 0
+            )
+
+    return json.dumps(prices, indent=4)
+
+
 def get_new_data(file_path):
     try:
         building_response = requests.get("https://rest.fnar.net/building/allbuildings")
@@ -32,6 +61,7 @@ def get_new_data(file_path):
             json_data: dict = {
                 "buildings": json.loads(building_response.text),
                 "materials": json.loads(material_response.text),
+                "prices": json.loads(get_price_data()),
             }
             jsonf.write(json.dumps(json_data, indent=4))
 
