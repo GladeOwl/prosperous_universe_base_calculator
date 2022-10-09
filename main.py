@@ -1,7 +1,33 @@
 import os
 import sys
-from import_data import get_old_data, get_new_data
-from compile_input import input_buildings
+from planet import Planet
+from outpost import Outpost
+from building import Building
+from import_data import import_data
+from output_data import output_to_terminal
+
+
+def input_buildings(outpost: Outpost, data: dict):
+    ticker: str = input("Building Ticker?: ")
+
+    if ticker == "":
+        print("Please input a building name.")
+        return
+
+    for item in data["buildings"]:
+        if item["Ticker"] == ticker:
+            amount: int = int(input("Build Amount? (default: 1): ") or 1)
+
+            building: Building = Building(ticker, amount, outpost)
+            building.work_data(item)
+            building.add_planet_data()
+
+            outpost.buildings[ticker] = building
+
+            print(f"Building Added: {item['Name']}, {amount}x.")
+            return
+
+    print("Bad Ticker.")
 
 
 def get_resource_cost(buildings: list, resources: dict):
@@ -17,35 +43,31 @@ def get_resource_cost(buildings: list, resources: dict):
 
 if __name__ == "__main__":
     file_path: str = os.path.join(sys.path[0], "./data.json")
-    get_data: str = input("Import new data? (y/n) (default: y): ") or "y"
 
-    if get_data == "y" or not os.path.isfile(file_path):
-        print("Importing new data.")
-        data: dict = get_new_data(file_path)
+    if not os.path.isfile(file_path):
+        print("Local Data file Not Found.")
+        new_data: bool = True
     else:
-        data: dict = get_old_data(file_path)
+        new_data: bool = (input("Import new data? (y/n) (default: y): ") or "y") == "y"
 
-    total_area: int = 0
-    buildings: list = []
-    resources: dict = {}
-    population: dict = {
-        "Pioneers": 0,
-        "Settlers": 0,
-        "Technicians": 0,
-        "Engineers": 0,
-        "Scientists": 0,
-    }
+    data: dict = import_data(new_data, file_path)
+
+    planet: Planet = Planet(
+        input("Planet Name? (default: Harmonia) (Gas Planets not supported): ")
+        or "Harmonia"
+    )
+    planet.calculate_materials()
+    outpost: Outpost = Outpost(planet)
 
     is_done: bool = False
 
     while not is_done:
-        total_area += input_buildings(buildings, data, population)
+        input_buildings(outpost, data)
 
         is_done_input = input("Done? (y/n) (default: n): ")
         if is_done_input == "y":
             is_done = True
 
-    get_resource_cost(buildings, resources)
-    print(resources)
+    outpost.calculate_data(data)
 
-    # TODO: This guy is pretty much done. Just need a way to combine all the info into a good terminal output
+    output_to_terminal(outpost)
