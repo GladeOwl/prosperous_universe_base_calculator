@@ -52,7 +52,10 @@ if __name__ == "__main__":
 
     data: dict = import_data(new_data, file_path)
 
-    planet: Planet = Planet(input("Planet Name? (default: Harmonia): ") or "Harmonia")
+    planet: Planet = Planet(
+        input("Planet Name? (default: Harmonia) (Gas Planets not supported): ")
+        or "Harmonia"
+    )
     planet.calculate_materials()
     outpost: Outpost = Outpost(planet)
 
