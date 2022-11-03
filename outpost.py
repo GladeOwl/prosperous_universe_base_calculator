@@ -35,13 +35,22 @@ class Outpost:
         self.calculate_population()
 
     def calculate_prices(self, data: dict):
-        self.total_price = 0
+        self.total_price: float = 0
+        self.override_total_price: float = 0
+        self.final_price: float = 0
+
         for ticker in self.materials:
             material_object: Material = self.materials[ticker]["info"]
             material_object.get_price(data)
-            self.total_price += round(
-                material_object.price * self.materials[ticker]["amount"], 2
-            )
+
+            price = material_object.price * self.materials[ticker]["amount"]
+            self.total_price += price
+
+            if hasattr(material_object, "o_price"):
+                price = material_object.o_price * self.materials[ticker]["amount"]
+                self.override_total_price += price
+
+            self.final_price += price
 
     def calculate_population(self):
         for ticker in self.buildings:

@@ -1,4 +1,4 @@
-from xml.dom import NotFoundErr
+import json
 
 
 class Material:
@@ -7,8 +7,13 @@ class Material:
 
     def get_price(self, data: dict):
         if self.ticker not in data["prices"].keys():
-            raise NotFoundErr(
+            raise NameError(
                 f"Bad Ticker for the {self.ticker} Material. Something is wrong."
             )
 
-        self.price = data["prices"][self.ticker]
+        with open("./override.json", "r", encoding="utf-8") as jsonf:
+            override_data = json.load(jsonf)
+            if self.ticker in override_data:
+                self.o_price: float = float(override_data[self.ticker])
+
+        self.price: float = float(data["prices"][self.ticker])

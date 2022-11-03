@@ -6,6 +6,8 @@ from building import Building
 from import_data import import_data
 from output_data import output_to_terminal
 
+os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
+
 
 def input_buildings(outpost: Outpost, data: dict):
     ticker: str = input("Building Ticker?: ")
