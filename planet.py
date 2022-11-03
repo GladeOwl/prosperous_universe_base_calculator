@@ -57,4 +57,6 @@ class Planet:
                 {"ticker": "HSE", "amount": 1, "area_cost": False}
             )
         elif pressure < 0.25:  ## TODO: It can't handle Gas planets
-            self.required_materials.append({"SEA": 1, "area_cost": True})
+            self.required_materials.append(
+                {"ticker": "SEA", "amount": 1, "area_cost": True}
+            )
