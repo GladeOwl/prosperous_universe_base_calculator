@@ -27,8 +27,8 @@ class Outpost:
             "amount": material_amount * building_amount,
         }
 
-    def add_material_amount(self, ticker, amount):
-        self.materials[ticker]["amount"] += amount
+    def add_material_amount(self, ticker, amount, building_amount):
+        self.materials[ticker]["amount"] += amount * building_amount
 
     def calculate_data(self, data: dict):
         self.calculate_prices(data)
