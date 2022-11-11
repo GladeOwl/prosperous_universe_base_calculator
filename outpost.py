@@ -1,3 +1,4 @@
+import math
 from material import Material
 from planet import Planet
 
@@ -21,14 +22,25 @@ class Outpost:
         material_amount: int,
         building_amount: int,
         material_object: Material,
+        area_cost: int,
     ):
+
         self.materials[ticker] = {
             "info": material_object,
-            "amount": material_amount * building_amount,
+            "amount": material_amount * building_amount
+            if ticker != "AEF"
+            else self.get_aef_amount(area_cost, building_amount),
         }
 
-    def add_material_amount(self, ticker, amount, building_amount):
-        self.materials[ticker]["amount"] += amount * building_amount
+    def add_material_amount(self, ticker, amount, building_amount, area_cost):
+        self.materials[ticker]["amount"] += (
+            amount * building_amount
+            if ticker != "AEF"
+            else self.get_aef_amount(area_cost, building_amount)
+        )
+
+    def get_aef_amount(self, area_cost, building_amount):
+        return math.ceil(area_cost / 3) * building_amount
 
     def calculate_data(self, data: dict):
         self.calculate_prices(data)

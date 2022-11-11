@@ -9,27 +9,42 @@ from output_data import output_to_terminal
 os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 
 
-def input_buildings(outpost: Outpost, data: dict):
-    ticker: str = input("Building Ticker?: ")
+def get_build_list():
+    try:
+        with open("./build_list.txt", "r") as txtf:
+            return txtf.readlines()
+    except FileNotFoundError:
+        open("./build_list.txt", "w").close()
+        raise FileNotFoundError(
+            "Build List txt file not found. A new one has been created, please intput your list and try again."
+        )
 
-    if ticker == "":
-        print("Please input a building name.")
-        return
 
+def get_build_price(outpost: Outpost, data: dict, build_list: list):
+    for line in build_list:
+        build_with_amount = line.split(" ")
+
+        if len(build_with_amount) != 2:
+            raise ValueError(
+                f"idk wtf {build_with_amount} is.. but try again and type it better this time."
+            )
+
+        input_buildings(
+            outpost, data, build_with_amount[0], int(build_with_amount[1].strip())
+        )
+
+
+def input_buildings(outpost: Outpost, data: dict, ticker: str, amount_tobe_built: int):
     for item in data["buildings"]:
         if item["Ticker"] == ticker:
-            amount: int = int(input("Build Amount? (default: 1): ") or 1)
+            amount: int = amount_tobe_built
 
             building: Building = Building(ticker, amount, outpost)
             building.work_data(item)
             building.add_planet_data()
 
             outpost.buildings[ticker] = building
-
-            print(f"Building Added: {item['Name']}, {amount}x.")
             return
-
-    print("Bad Ticker.")
 
 
 def get_resource_cost(buildings: list, resources: dict):
@@ -63,12 +78,8 @@ if __name__ == "__main__":
 
     is_done: bool = False
 
-    while not is_done:
-        input_buildings(outpost, data)
-
-        is_done_input = input("Done? (y/n) (default: n): ")
-        if is_done_input == "y":
-            is_done = True
+    build_list: list = get_build_list()
+    get_build_price(outpost, data, build_list)
 
     outpost.calculate_data(data)
 

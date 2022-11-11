@@ -43,10 +43,14 @@ class Building:
     def add_material(self, ticker: str, amount: int):
         if ticker not in self.outpost.materials:
             material_object: Material = Material(ticker)
-            self.outpost.add_material(ticker, amount, self.amount, material_object)
+            self.outpost.add_material(
+                ticker, amount, self.amount, material_object, self.area_cost
+            )
         else:
             material_object: Material = self.outpost.materials[ticker]["info"]
-            self.outpost.add_material_amount(ticker, amount, self.amount)
+            self.outpost.add_material_amount(
+                ticker, amount, self.amount, self.area_cost
+            )
 
         self.materials[ticker] = {
             "info": material_object,

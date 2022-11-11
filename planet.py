@@ -28,7 +28,11 @@ class Planet:
             )
         else:
             self.required_materials.append(
-                {"ticker": "AEF", "amount": 4, "area_cost": True}
+                {
+                    "ticker": "AEF",
+                    "amount": 3,
+                    "area_cost": False,
+                }
             )
 
     def check_temperature(self, temperature: float):
